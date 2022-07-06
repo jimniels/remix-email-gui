@@ -6,6 +6,11 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import stylesheetUrl from "./root.css";
+
+export function links() {
+  return [{ rel: "stylesheet", href: stylesheetUrl }];
+}
 
 export const meta = () => ({
   charset: "utf-8",

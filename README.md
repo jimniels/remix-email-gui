@@ -1,52 +1,27 @@
-# Welcome to Remix!
+# Remix Email Composer
 
-- [Remix Docs](https://remix.run/docs)
+- Developement: `npm run dev`
+- Build: `npm run build`
+- Deploy: `git push`
 
-## Netlify Setup
+## How to compose an email
 
-1. Install the [Netlify CLI](https://www.netlify.com/products/dev/):
+1. Open editor
+2. Start a new file _or_ pull in one from GitHub
+3. Make changes (hit save to persist changes)
+4. Click "Copy HTML"
+5. Go to Convertkit, paste contents in a new email as an HTML block
+6. Send email
 
-```sh
-npm i -g netlify-cli
-```
+## ToDos
 
-If you have previously installed the Netlify CLI, you should update it to the latest version:
+Shoulds:
 
-```sh
-npm i -g netlify-cli@latest
-```
+- Setup to integrate with Github for storage
+  - Allow linking to specific templates
+- Setup a "populate" template
 
-2. Sign up and log in to Netlify:
+Nice-to-haves:
 
-```sh
-netlify login
-```
-
-3. Create a new site:
-
-```sh
-netlify init
-```
-
-## Development
-
-The Netlify CLI starts your app in development mode, rebuilding assets on file changes.
-
-```sh
-npm run dev
-```
-
-Open up [http://localhost:3000](http://localhost:3000), and you should be ready to go!
-
-## Deployment
-
-There are two ways to deploy your app to Netlify, you can either link your app to your git repo and have it auto deploy changes to Netlify, or you can deploy your app manually. If you've followed the setup instructions already, all you need to do is run this:
-
-```sh
-npm run build
-# preview deployment
-netlify deploy
-
-# production deployment
-netlify deploy --prod
-```
+- Light/dark mode on client
+- Responsive
