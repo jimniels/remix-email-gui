@@ -6,30 +6,39 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  font-family: ui-sans-serif, sans-serif;
 }
 
 .container {
   display: flex;
   height: 100%;
-  overflow: hidden;
   flex-direction: row;
 }
 .container__in,
 .container__out {
   width: 50%;
-  overflow-y: scroll;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
+
 .container__in {
-  line-height: 1.4;
+  border-right: 1px solid #eee;
   background: #f7f7f7;
+}
+.container__in textarea {
+  line-height: 1.4;
+  background: transparent;
   border: none;
   font-size: 1rem;
-  border-right: 1px solid #eee;
-  padding: 4rem 2rem 2rem;
+  padding: 2rem;
+  width: 100%;
+  height: 100%;
 }
-.container__in:focus {
+.container__in textarea:focus {
   outline: none;
 }
+
 @media screen and (max-width: 720px) {
   .container__in {
     display: none;
@@ -38,29 +47,62 @@ body {
     width: 100%;
   }
 }
+
 .container__out {
-  border: none;
-  padding-top: 3rem;
-}
-.container__actions {
-  position: absolute;
-  width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #eee;
-  height: 3rem;
-  padding: 0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
-iframe {
+.container__out iframe {
   border: none;
   width: 100%;
   height: 100%;
 }
 
-.actions {
+.container-actions {
+  position: sticky;
+  top: 0;
+  display: flex;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #eee;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.container__in .container-actions {
+  background: #f7f7f7;
+}
+.container__out .container-actions {
+  justify-content: flex-end;
+}
+
+.container__actions > * {
   display: flex;
   gap: 0.5rem;
+}
+
+.file-input {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.spinner {
+  position: absolute;
+  right: 1rem;
+  top: 4rem;
+}
+
+.error {
+  position: fixed;
+  width: 500px;
+  left: 50%;
+  margin-left: -250px;
+  z-index: 10;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid red;
+  color: red;
+  box-shadow: 0 0 0 3px rgb(255 0 0 / 15%);
+  top: 1rem;
 }

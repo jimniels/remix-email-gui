@@ -17,11 +17,15 @@
 
 Shoulds:
 
-- Setup to integrate with Github for storage
-  - Allow linking to specific templates
-- Setup a "populate" template
+- Fix scroll restoration so it doesn't jump on refresh
+- Fix relevant TODO items in code
+- Setup a "populate" button to grab example
+- Update README on how to use this thing
+- Is how we're authenticating this ok?
 
 Nice-to-haves:
 
 - Light/dark mode on client
 - Responsive
+- Store email being composed in the browser in localStorage
+- Sync scrolling between two panes
