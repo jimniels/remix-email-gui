@@ -15,18 +15,18 @@
 
 ## ToDos
 
-Shoulds:
+Must fix:
 
 - Get the logo hosted off cdn.jim-nielsen.com
-- Fix scroll restoration so it doesn't jump on refresh
 - Fix relevant TODO items in code
-  - Support `/`, `/create`, and `/edit?id=` routes
-- Setup a "populate" button to grab example
-- Update README on how to use this thing
+  - Refactor to support `/`, `/create`, and `/edit?id=` routes
+- Update README on how to use this to author & send an email
+  - Where does this code live & get hosted?
 - Is how we're authenticating this ok? Do we really want to have an open "Save to GitHub" out on the web somewhere? (They'll only ever be able to save to an open repo)
 
-Nice-to-haves:
+For later (in order):
 
+- Fix scroll restoration so it doesn't jump on refresh
 - Light/dark mode on client
 - Responsive
 - Store email being composed in the browser in localStorage
