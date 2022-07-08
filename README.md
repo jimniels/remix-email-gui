@@ -17,11 +17,13 @@
 
 Shoulds:
 
+- Get the logo hosted off cdn.jim-nielsen.com
 - Fix scroll restoration so it doesn't jump on refresh
 - Fix relevant TODO items in code
+  - Support `/`, `/create`, and `/edit?id=` routes
 - Setup a "populate" button to grab example
 - Update README on how to use this thing
-- Is how we're authenticating this ok?
+- Is how we're authenticating this ok? Do we really want to have an open "Save to GitHub" out on the web somewhere? (They'll only ever be able to save to an open repo)
 
 Nice-to-haves:
 
@@ -29,3 +31,6 @@ Nice-to-haves:
 - Responsive
 - Store email being composed in the browser in localStorage
 - Sync scrolling between two panes
+- File bugs with `@ryanflorence/md`
+  - Opt out of showing the "link" icons
+  - `processMarkdown` crashes with the string "#" or "# "

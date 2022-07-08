@@ -13,7 +13,7 @@ import mjml2html from "mjml";
  * @returns {{ emailHtml: string, emailTemplate: string, emailBody: string }}
  */
 export default function mjml(htmlBody = "") {
-  const { html, /* json,*/ errors } = mjml2html(/*html*/ `<mjml>
+  let { html, /* json,*/ errors } = mjml2html(/*html*/ `<mjml>
     <mj-head>
       <mj-attributes>
         <!-- <mj-font name="Source Code Pro" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro" /> -->
@@ -57,6 +57,7 @@ export default function mjml(htmlBody = "") {
           border: 4px solid;
           margin: 96px 0 24px 0;
           transform: rotate(-.75deg);
+          background: currentColor;
         }
         .prose img {
           border-width: 8px;
@@ -64,9 +65,11 @@ export default function mjml(htmlBody = "") {
         }
         
         .prose blockquote {
-          border-left: 1px solid;
-          margin-left: 0;
-          padding-left: 24px;
+          font-style: italic;
+        }
+
+        .prose blockquote em {
+          font-style: normal;
         }
         
         /* @TODO other elements: table, pre, code, hr, etc. */
@@ -75,26 +78,31 @@ export default function mjml(htmlBody = "") {
         .prose hr:nth-of-type(2n+1),
         .prose hr:nth-of-type(2n+1) + p img {
           border-color: #3992ff;
+          color: #3992ff;
         }
         
         .prose hr:nth-of-type(2n+2),
         .prose hr:nth-of-type(2n+2) + p img {
           border-color: #6bd968;
+          color: #6bd968;
         }
         
         .prose hr:nth-of-type(2n+3),
         .prose hr:nth-of-type(2n+3) + p img {
           border-color: #cd8701;
+          color: #cd8701;
         }
         
         .prose hr:nth-of-type(2n+4),
         .prose hr:nth-of-type(2n+4) + p img {
           border-color: #d83bd2;
+          color: #d83bd2;
         }
 
         .prose hr:nth-of-type(2n+5),
         .prose hr:nth-of-type(2n+5) + p img {
           border-color: #f44250;
+          color: #f44250;
         }
         
         .footer,
@@ -131,6 +139,7 @@ export default function mjml(htmlBody = "") {
             <a href="{{ archive_url }}">View in browser</a>
           </mj-text>
           <mj-image
+            alt="Remix logo"
             href="https://remix.run"
             src="https://cdn.jim-nielsen.com/remix-block.png"
             width="128px"
@@ -157,6 +166,9 @@ export default function mjml(htmlBody = "") {
       </mj-section>
     </mj-body>
   </mjml>`);
+
+  // Trim excess that MJML gives back
+  html = html.trim();
 
   if (errors.length)
     console.error("Error encountered while parsing mjml template", errors);
