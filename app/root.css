@@ -1,3 +1,19 @@
+:root {
+  color-scheme: light dark;
+
+  --color-bg: #f7f7f7;
+  --color-fg: #fff;
+  --color-border: #e3e3e3;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #121212;
+    --color-fg: #121212;
+    --color-border: #434343;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -7,6 +23,22 @@ body {
   padding: 0;
   height: 100%;
   font-family: ui-sans-serif, sans-serif;
+}
+
+.wrapper {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  background: var(--color-fg);
+}
+
+.error {
+  font-size: 0.875rem;
+  padding: 1em;
+  background: rgb(255 0 0 / 5%);
+  border-bottom: 1px solid red;
+  color: red;
+  text-align: center;
 }
 
 .container {
@@ -23,9 +55,10 @@ body {
 }
 
 .container__in {
-  border-right: 1px solid #eee;
-  background: #f7f7f7;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-bg);
 }
+
 .container__in textarea {
   line-height: 1.4;
   background: transparent;
@@ -35,6 +68,7 @@ body {
   width: 100%;
   height: 100%;
 }
+
 .container__in textarea:focus {
   outline: none;
 }
@@ -57,52 +91,53 @@ body {
   height: 100%;
 }
 
-.container-actions {
+.toolbar {
   position: sticky;
   top: 0;
   display: flex;
   padding: 1rem 2rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border);
   height: 3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
 }
-.container__in .container-actions {
-  background: #f7f7f7;
+
+.toolbar__left {
+  flex-grow: 2;
 }
-.container__out .container-actions {
-  justify-content: flex-end;
+.toolbar input[type="text"] {
+  width: 100%;
+}
+.toolbar__left img {
+  width: 18px;
+  height: 18px;
+  opacity: 0.325;
 }
 
-.container__actions > * {
+.toolbar__right {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 1rem;
 }
 
-.file-input {
+.input-group {
   display: flex;
+  align-items: center;
   gap: 0.25rem;
 }
 
-.spinner {
-  position: absolute;
-  right: 1rem;
-  top: 4rem;
+a[aria-label="Reset"] {
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.5;
+  font-weight: 300;
+  position: relative;
+  top: -0.05rem;
 }
 
-.error {
-  position: fixed;
-  width: 500px;
-  left: 50%;
-  margin-left: -250px;
-  z-index: 10;
-  padding: 1rem;
-  border-radius: 8px;
-  background: #fff;
-  border: 1px solid red;
-  color: red;
-  box-shadow: 0 0 0 3px rgb(255 0 0 / 15%);
-  top: 1rem;
+a[aria-label="Reset"]:hover {
+  opacity: 1;
 }

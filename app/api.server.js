@@ -7,21 +7,32 @@ const owner = "remix-run";
 const repo = "newsletter";
 
 export async function getFile(file) {
-  try {
-    const res = await octokit.request(
-      "GET /repos/{owner}/{repo}/contents/{path}",
-      {
-        owner,
-        repo,
-        path: `archive/${file}`,
-      }
-    );
-    const md = Buffer.from(res.data.content, "base64").toString("utf-8");
-    return md;
-  } catch (e) {
-    console.error("Failed to fetch file from GitHub.", e);
-    return "";
-  }
+  const res = await octokit.request(
+    "GET /repos/{owner}/{repo}/contents/{path}",
+    {
+      owner,
+      repo,
+      path: `archive/${file}`,
+    }
+  );
+  const md = Buffer.from(res.data.content, "base64").toString("utf-8");
+  return md;
+}
+
+/**
+ * Get a list of files in the newsletter archive
+ * @returns {Array.<string>}
+ */
+export async function getFiles() {
+  const res = await octokit.request(
+    "GET /repos/{owner}/{repo}/contents/{path}",
+    {
+      owner,
+      repo,
+      path: `archive`,
+    }
+  );
+  return res.data.map((item) => item.name);
 }
 
 /**

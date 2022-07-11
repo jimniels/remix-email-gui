@@ -141,7 +141,7 @@ export default function mjml(htmlBody = "") {
           <mj-image
             alt="Remix logo"
             href="https://remix.run"
-            src="https://cdn.jim-nielsen.com/remix-block.png"
+            src="https://user-images.githubusercontent.com/1316441/178366107-d3ef4ffa-ffa2-4c8f-bb11-8069def7962a.png"
             width="128px"
             align="left"
             target="_blank"
