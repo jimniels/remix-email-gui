@@ -2,8 +2,6 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "prebuild": "npm run generate-css",
-    "build": "cross-env NODE_ENV=production netlify build",
     "generate-css": "tailwindcss -o ./app/tailwind.css --minify",
     "predev": "npm run generate-css",
     "dev": "cross-env NODE_ENV=development netlify dev",

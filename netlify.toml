@@ -1,5 +1,5 @@
 [build]
-  command = "remix build"
+  command = "npm run generate-css && remix build"
   publish = "public"
 
 [dev]
