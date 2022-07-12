@@ -2,8 +2,12 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
+    "prebuild": "npm run generate-css",
+    "build": "cross-env NODE_ENV=production netlify build",
+    "generate-css": "tailwindcss -o ./app/tailwind.css --minify",
+    "predev": "npm run generate-css",
     "dev": "cross-env NODE_ENV=development netlify dev",
+    "prestart": "npm run generate-css",
     "start": "cross-env NODE_ENV=production netlify dev"
   },
   "dependencies": {
@@ -22,7 +26,8 @@
   "devDependencies": {
     "@remix-run/dev": "^1.6.3",
     "@remix-run/eslint-config": "^1.6.3",
-    "eslint": "^8.15.0"
+    "eslint": "^8.15.0",
+    "tailwindcss": "^3.1.6"
   },
   "engines": {
     "node": ">=14"

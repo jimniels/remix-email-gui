@@ -32,7 +32,7 @@ export async function getFiles() {
       path: `archive`,
     }
   );
-  return res.data.map((item) => item.name);
+  return res.data.map((item) => item.name).reverse();
 }
 
 /**
