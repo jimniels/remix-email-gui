@@ -53,7 +53,7 @@ export default function mjml(htmlBody = "") {
           color: inherit;
         }
         .prose hr {
-          width: 96px;
+          width: 48px;
           border: 4px solid;
           margin: 96px 0 24px 0;
           transform: rotate(-.75deg);
@@ -146,7 +146,7 @@ export default function mjml(htmlBody = "") {
             align="left"
             target="_blank"
             padding-top="0px"
-            padding-bottom="96px">
+            padding-bottom="48px">
           </mj-image>
           <mj-text css-class="prose" color="inherit">
             <!-- <BODY_CONTENTS> -->${htmlBody}<!-- <BODY_CONTENTS> -->
