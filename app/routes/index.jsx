@@ -84,7 +84,6 @@ export default function Index() {
     emailBodyHtml,
   } = actionData ? actionData : loaderData;
   const submit = useSubmit();
-  const location = useLocation();
   const transition = useTransition();
   const isLoading =
     transition.state === "submitting" || transition.state === "loading";
@@ -219,7 +218,7 @@ export default function Index() {
               https://github.com/remix-run/remix/issues/3133 */}
           <Form
             method="post"
-            action={`${location.pathname}${location.search}`}
+            action={`/?index${file && `&file=${file}`}`}
             className="w-1/2 h-full pt-14 border-r border-gray-100"
             id="form-with-md"
           >
