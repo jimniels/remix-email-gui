@@ -1,10 +1,11 @@
 import {
   Form,
+  Link,
   useActionData,
   useLoaderData,
+  useLocation,
   useSubmit,
   useTransition,
-  Link,
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { processMarkdown } from "@ryanflorence/md";
@@ -29,12 +30,14 @@ const btnClassNames = `appearance-none border border-gray-200 bg-white dark:bg-i
  */
 export async function loader({ request }) {
   const url = new URL(request.url);
-  let file = url.searchParams.get("file") || "";
-  let md = getPlaceholderMd();
+  const file = url.searchParams.get("file") || "";
 
+  // If relevant, get a pre-exisiting markdown file from GitHub
+  let md = getPlaceholderMd();
+  let sha = "";
   if (file) {
     try {
-      md = await getFile(file);
+      ({ md, sha } = await getFile(file));
     } catch (e) {
       console.log(
         `Failed to load \`${file}\` from GitHub (%s). Falling back to empty template…`,
@@ -43,35 +46,45 @@ export async function loader({ request }) {
     }
   }
 
-  // NOTE: there's a bug in `processMarkdown` where it won't process the string "#" or "# "
-  const htmlFromMd = await processMarkdown(md);
-  const { emailHtml, emailTemplateHtml, emailBodyHtml } = mjml(htmlFromMd);
-
+  // If we don't have a GitHub file, we'll fetch the available ones
   let files = [];
   if (!file) {
     try {
       files = await getFiles();
     } catch (e) {
-      console.error("Failed to fetch files on GitHub");
+      console.error("Failed to fetch files on GitHub", e);
     }
   }
 
+  // NOTE: there's a bug in `processMarkdown` where it won't process the string "#" or "# "
+  const htmlFromMd = await processMarkdown(md);
+  const { emailHtml, emailBodyHtml } = mjml(htmlFromMd);
+
   return json({
+    sha,
     file,
+    files,
     md,
     emailHtml,
-    emailTemplateHtml,
     emailBodyHtml,
-    files,
   });
 }
 
 export default function Index() {
   const loaderData = useLoaderData();
   const actionData = useActionData();
-  let { error, file, files, md, emailHtml, emailTemplateHtml, emailBodyHtml } =
-    actionData ? actionData : loaderData;
+  let {
+    error,
+    file,
+    files,
+    md,
+    sha,
+    emailHtml,
+    emailTemplateHtml,
+    emailBodyHtml,
+  } = actionData ? actionData : loaderData;
   const submit = useSubmit();
+  const location = useLocation();
   const transition = useTransition();
   const isLoading =
     transition.state === "submitting" || transition.state === "loading";
@@ -117,12 +130,6 @@ export default function Index() {
             <>
               <div className="flex items-center gap-4">
                 <strong className="font-mono">{file}</strong>
-                <input
-                  type="hidden"
-                  name="file"
-                  value={file}
-                  form="form-with-md"
-                />
 
                 <button
                   disabled={isLoading}
@@ -132,7 +139,7 @@ export default function Index() {
                   form="form-with-md"
                   className={btnClassNames}
                 >
-                  Save to GitHub
+                  {sha ? "Sync" : "Save"} to GitHub
                 </button>
 
                 {/* TODO make this more progressively-enhanced */}
@@ -206,13 +213,17 @@ export default function Index() {
           )}
         </div>
       </div>
-      <div className="w-full h-full flex">
-        <Form
-          method="post"
-          className="w-1/2 h-full border-r border-gray-100 pt-14"
-          id="form-with-md"
-        >
-          {file && (
+      {file && (
+        <div className="w-full h-full flex" style={{ overflow: "hidden" }}>
+          {/* Preserve the `file` query param across requests 
+              https://github.com/remix-run/remix/issues/3133 */}
+          <Form
+            method="post"
+            action={`${location.pathname}${location.search}`}
+            className="w-1/2 h-full pt-14 border-r border-gray-100"
+            id="form-with-md"
+          >
+            <input type="hidden" value={sha} name="sha" />
             <textarea
               name="md"
               placeholder={getPlaceholderMd()}
@@ -220,40 +231,41 @@ export default function Index() {
               onChange={debouncedEventHandler}
               className="font-mono w-full h-full outline-none p-8 leading-relaxed bg-inherit"
             ></textarea>
-          )}
-        </Form>
+          </Form>
 
-        <output className="w-1/2 h-full">
-          {file && (
+          <output className="w-1/2 h-full">
             <iframe
               title="Email template preview"
               srcDoc={emailHtml}
               className="h-full w-full pt-14"
             />
-          )}
-        </output>
-      </div>
+          </output>
+        </div>
+      )}
     </div>
   );
 }
 
 export async function action({ request }) {
+  const url = new URL(request.url);
+  const file = url.searchParams.get("file") || "";
+
   const formData = await request.formData();
   const action = formData.get("_action");
-  const file = formData.get("file");
   const md = formData.get("md");
+  let sha = formData.get("sha");
   const htmlFromMd = await processMarkdown(md);
   const { emailHtml, emailTemplateHtml, emailBodyHtml } = mjml(htmlFromMd);
 
   let error = "";
   if (action === "save-to-github") {
-    console.log("SAVING TO GITHUB...", file);
+    console.log("SAVING TO GITHUB...", file, sha);
     try {
-      if (!file) {
-        throw new Error("Must provide a file name to save to GitHub.");
-      }
-      await putFile(file, md);
+      // If we're saving the file, not syncing it, let's get back the sha
+      // and pass it back to the client so now we know we're syncing not saving
+      ({ sha } = await putFile({ file, md, sha }));
     } catch (e) {
+      console.log("Failed to save file to GitHub.", e);
       error = e.toString();
     }
   }
@@ -262,6 +274,7 @@ export async function action({ request }) {
     ...(error ? { error } : {}),
     file,
     md,
+    sha,
     emailHtml,
     emailTemplateHtml,
     emailBodyHtml,

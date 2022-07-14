@@ -15,8 +15,9 @@ export async function getFile(file) {
       path: `archive/${file}`,
     }
   );
+  const sha = res.data.sha;
   const md = Buffer.from(res.data.content, "base64").toString("utf-8");
-  return md;
+  return { md, sha };
 }
 
 /**
@@ -39,36 +40,27 @@ export async function getFiles() {
  * Take a file path and its contents and upload it to GitHub
  * @param {string} file - Name of the file
  * @param {string} str - Contents of the file (in plain text)
+ * @param {string?} sha
  * @returns
  */
-export async function putFile(file, body) {
-  // See if the file already exists
-  let sha = "";
-  const res1 = await octokit.request(
-    "GET /repos/{owner}/{repo}/contents/{path}",
+export async function putFile({ file, md, sha }) {
+  const res = await octokit.request(
+    "PUT /repos/{owner}/{repo}/contents/{path}",
     {
       owner,
       repo,
       path: `archive/${file}`,
+      message: `docs(www): update from website tool`,
+      // @TODO change to a "machine user", or in a real fancy world allow user auth...
+      committer: {
+        name: "Jim Nielsen",
+        email: "jimniels@gmail.com",
+      },
+      content: Buffer.from(md, "utf-8").toString("base64"),
+      // If the sha doesn't exist, that means we're creating a new file
+      ...(sha ? { sha } : {}),
     }
   );
-  if (res1?.data?.sha) {
-    sha = res1.data.sha;
-  }
 
-  await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
-    owner,
-    repo,
-    path: `archive/${file}`,
-    message: `docs(www): update from website tool`,
-    // @TODO change to a "machine user", or in a real fancy world allow user auth...
-    committer: {
-      name: "Jim Nielsen",
-      email: "jimniels@gmail.com",
-    },
-    content: Buffer.from(body, "utf-8").toString("base64"),
-    ...(sha ? { sha } : {}),
-  });
-
-  return;
+  return { sha: res.data.content.sha };
 }
